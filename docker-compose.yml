@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build: .
+    container_name: frontend-tailadmin
+    ports:
+      - "8003:80"
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.3"
