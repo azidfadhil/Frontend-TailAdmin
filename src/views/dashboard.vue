@@ -1,11 +1,11 @@
 <template>
   <admin-layout>
     <div class="grid grid-cols-12 gap-4 md:gap-6">
-      <div class="col-span-12 xl:col-span-4">
+      <div class="col-span-12 xl:col-span-5">
         <prayer-schedule />
       </div>
 
-      <div class="col-span-12 space-y-6 xl:col-span-8">
+      <div class="col-span-12 space-y-6 xl:col-span-7">
         <ecommerce-metrics />
         <monthly-target />
       </div>

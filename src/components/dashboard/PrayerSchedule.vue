@@ -21,11 +21,13 @@
       <div class="flex items-end justify-between mt-1">
         <div>
           <p class="text-xl font-bold">{{ nextPrayer.name }}</p>
-          <p class="text-sm opacity-80">{{ nextPrayer.time }}</p>
+          <p class="text-sm opacity-80">
+            {{ nextPrayer.time }}
+            <span v-if="nextPrayer.isTomorrow" class="font-medium text-brand-200">(Besok)</span>
+          </p>
         </div>
         <div class="text-right">
           <p class="text-2xl font-bold font-mono">{{ countdown }}</p>
-          <p class="text-sm opacity-80">lagi</p>
         </div>
       </div>
     </div>
@@ -143,8 +145,6 @@ const todaySchedule = computed(() => {
   return scheduleData.value.jadwal?.find((j: any) => j.tanggal === today)
 })
 
-console.log(todaySchedule)
-
 // Label hari ini
 const todayLabel = computed(() => {
   if (!todaySchedule.value) return ''
@@ -190,14 +190,42 @@ const prayers = computed(() => {
 
 // Sholat berikutnya
 const nextPrayer = computed(() => {
-  return prayers.value.find(p => p.isNext) ?? null
+  // 1. Cari sholat berikutnya di hari ini
+  const nextToday = prayers.value.find(p => p.isNext)
+  
+  if (nextToday) {
+    return { ...nextToday, isTomorrow: false }
+  }
+
+  // 2. Jika sudah lewat Isya, ambil Subuh besok
+  if (!scheduleData.value || !todaySchedule.value) return null
+
+  const todayDate = now.value.getDate()
+  // Coba cari jadwal besok di data bulan ini
+  const tomorrowSchedule = scheduleData.value.jadwal?.find((j: any) => j.tanggal === todayDate + 1)
+
+  // Gunakan subuh besok. Jika ganti bulan (tanggal tidak ketemu), gunakan subuh hari ini sebagai estimasi/fallback
+  const subuhTime = tomorrowSchedule ? tomorrowSchedule.subuh : todaySchedule.value.subuh
+
+  return {
+    name: 'Subuh',
+    time: subuhTime,
+    emoji: '🌙',
+    isTomorrow: true
+  }
 })
 
 // Countdown
 const countdown = computed(() => {
   if (!nextPrayer.value) return '--:--:--'
 
-  const nextMinutes = timeToMinutes(nextPrayer.value.time)
+  let nextMinutes = timeToMinutes(nextPrayer.value.time)
+  
+  // Jika sholat yang dituju adalah besok, tambahkan 24 jam (1440 menit)
+  if (nextPrayer.value.isTomorrow) {
+    nextMinutes += 24 * 60
+  }
+
   let diffSeconds = (nextMinutes - currentMinutes.value) * 60 - now.value.getSeconds()
 
   if (diffSeconds < 0) diffSeconds = 0
