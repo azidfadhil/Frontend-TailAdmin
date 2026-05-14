@@ -23,22 +23,22 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="dark:hidden"
-          src="/images/logo/logo.svg"
+          src="/images/logo/logo-tab.png"
           alt="Logo"
-          width="150"
-          height="40"
+          width="32px"
+          height="32px"
         />
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="hidden dark:block"
-          src="/images/logo/logo-dark.svg"
+          src="/images/logo/logo-tab.png"
           alt="Logo"
-          width="150"
-          height="40"
+          width="32px"
+          height="32px"
         />
         <img
           v-else
-          src="/images/logo/logo-icon.svg"
+          src="/images/logo/logo-tab.png"
           alt="Logo"
           width="32"
           height="32"
