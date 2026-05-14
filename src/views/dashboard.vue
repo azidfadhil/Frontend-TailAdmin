@@ -5,7 +5,11 @@
         <prayer-schedule />
       </div>
 
-      <div class="col-span-12 space-y-6 xl:col-span-7">
+      <div class="col-span-12 xl:col-span-7">
+        <daily-hadist />
+      </div>
+
+      <!-- <div class="col-span-12 space-y-6">
         <ecommerce-metrics />
         <monthly-target />
       </div>
@@ -20,7 +24,7 @@
 
       <div class="col-span-12 xl:col-span-7">
         <recent-orders />
-      </div>
+      </div> -->
     </div>
   </admin-layout>
 </template>
@@ -34,6 +38,7 @@ import CustomerDemographic from '../components/ecommerce/CustomerDemographic.vue
 import StatisticsChart from '../components/ecommerce/StatisticsChart.vue'
 import RecentOrders from '../components/ecommerce/RecentOrders.vue'
 import PrayerSchedule from '../components/dashboard/PrayerSchedule.vue'
+import DailyHadist from '@/components/dashboard/DailyHadist.vue'
 
 export default {
   components: {
@@ -45,6 +50,7 @@ export default {
     StatisticsChart,
     RecentOrders,
     PrayerSchedule,
+    DailyHadist,
   },
   name: 'Dashboard',
 }
