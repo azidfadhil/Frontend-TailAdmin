@@ -13,7 +13,7 @@ const router = createRouter({
       name: 'Signin',
       component: () => import('../views/Auth/Signin.vue'),
       meta: {
-        title: 'Signin',
+        title: 'Masuk',
         requiresGuest: true
       },
     },
@@ -21,10 +21,10 @@ const router = createRouter({
     // Protected routes
     {
       path: '/',
-      name: 'Ecommerce',
+      name: 'Dashboard',
       component: () => import('../views/Ecommerce.vue'),
       meta: {
-        title: 'eCommerce Dashboard',
+        title: 'Dashboard',
         requiresAuth: true
       },
     },
@@ -162,7 +162,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title || 'Dashboard'} | TailAdmin`
+  document.title = `${to.meta.title || 'Dashboard'} | Web MNI`
 
   const authStore = useAuthStore()
   const isAuthenticated = authStore.restoreFromToken()
