@@ -19,18 +19,9 @@
         !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start',
       ]"
     >
-      <router-link to="/">
+      <router-link to="/" class="flex flex-row items-center">
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
-          class="dark:hidden"
-          src="/images/logo/logo-tab.png"
-          alt="Logo"
-          width="32px"
-          height="32px"
-        />
-        <img
-          v-if="isExpanded || isHovered || isMobileOpen"
-          class="hidden dark:block"
           src="/images/logo/logo-tab.png"
           alt="Logo"
           width="32px"
@@ -43,6 +34,7 @@
           width="32"
           height="32"
         />
+        <h1 v-if="isExpanded || isHovered" class="ms-2 font-medium text-gray-700 dark:text-gray-400">Web MNI</h1>
       </router-link>
     </div>
     <div
@@ -206,7 +198,6 @@
           </div>
         </div>
       </nav>
-      <SidebarWidget v-if="isExpanded || isHovered || isMobileOpen" />
     </div>
   </aside>
 </template>
@@ -221,7 +212,6 @@ import {
   ChevronDownIcon,
   HorizontalDots,
 } from "../../icons";
-import SidebarWidget from "./SidebarWidget.vue";
 import { useSidebar } from "@/composables/useSidebar";
 
 const route = useRoute();
