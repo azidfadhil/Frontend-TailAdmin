@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,12 +7,25 @@ const router = createRouter({
     return savedPosition || { left: 0, top: 0 }
   },
   routes: [
+    // Public routes
+    {
+      path: '/signin',
+      name: 'Signin',
+      component: () => import('../views/Auth/Signin.vue'),
+      meta: {
+        title: 'Signin',
+        requiresGuest: true
+      },
+    },
+
+    // Protected routes
     {
       path: '/',
       name: 'Ecommerce',
       component: () => import('../views/Ecommerce.vue'),
       meta: {
         title: 'eCommerce Dashboard',
+        requiresAuth: true
       },
     },
     {
@@ -20,6 +34,7 @@ const router = createRouter({
       component: () => import('../views/Others/Calendar.vue'),
       meta: {
         title: 'Calendar',
+        requiresAuth: true
       },
     },
     {
@@ -28,6 +43,7 @@ const router = createRouter({
       component: () => import('../views/Others/UserProfile.vue'),
       meta: {
         title: 'Profile',
+        requiresAuth: true
       },
     },
     {
@@ -36,6 +52,7 @@ const router = createRouter({
       component: () => import('../views/Forms/FormElements.vue'),
       meta: {
         title: 'Form Elements',
+        requiresAuth: true
       },
     },
     {
@@ -44,6 +61,7 @@ const router = createRouter({
       component: () => import('../views/Tables/BasicTables.vue'),
       meta: {
         title: 'Basic Tables',
+        requiresAuth: true
       },
     },
     {
@@ -62,6 +80,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Alerts.vue'),
       meta: {
         title: 'Alerts',
+        requiresAuth: true
       },
     },
     {
@@ -70,6 +89,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Avatars.vue'),
       meta: {
         title: 'Avatars',
+        requiresAuth: true
       },
     },
     {
@@ -78,6 +98,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Badges.vue'),
       meta: {
         title: 'Badge',
+        requiresAuth: true
       },
     },
 
@@ -87,6 +108,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Buttons.vue'),
       meta: {
         title: 'Buttons',
+        requiresAuth: true
       },
     },
 
@@ -96,6 +118,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Images.vue'),
       meta: {
         title: 'Images',
+        requiresAuth: true
       },
     },
     {
@@ -104,6 +127,7 @@ const router = createRouter({
       component: () => import('../views/UiElements/Videos.vue'),
       meta: {
         title: 'Videos',
+        requiresAuth: true
       },
     },
     {
@@ -112,6 +136,7 @@ const router = createRouter({
       component: () => import('../views/Pages/BlankPage.vue'),
       meta: {
         title: 'Blank',
+        requiresAuth: true
       },
     },
 
@@ -125,27 +150,34 @@ const router = createRouter({
     },
 
     {
-      path: '/signin',
-      name: 'Signin',
-      component: () => import('../views/Auth/Signin.vue'),
-      meta: {
-        title: 'Signin',
-      },
-    },
-    {
       path: '/signup',
       name: 'Signup',
       component: () => import('../views/Auth/Signup.vue'),
       meta: {
         title: 'Signup',
+        requiresAuth: true
       },
     },
   ],
 })
 
-export default router
-
 router.beforeEach((to, from, next) => {
-  document.title = `Vue.js ${to.meta.title} | TailAdmin - Vue.js Tailwind CSS Dashboard Template`
+  document.title = `${to.meta.title || 'Dashboard'} | TailAdmin`
+
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.restoreFromToken()
+
+  // Kalau route butuh auth tapi belum login → redirect ke signin
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next({ name: 'Signin' })
+  }
+
+  // Kalau sudah login tapi akses signin → redirect ke dashboard
+  if (to.meta.requiresGuest && isAuthenticated) {
+    return next({ name: 'Ecommerce' })
+  }
+  
   next()
 })
+
+export default router

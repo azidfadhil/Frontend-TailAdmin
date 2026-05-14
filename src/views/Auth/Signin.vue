@@ -225,13 +225,30 @@
                         >Forgot password?</router-link
                       >
                     </div>
+                    <div
+                      v-if="errorMessage"
+                      class="p-3 text-sm text-red-600 bg-red-50 rounded-lg dark:bg-red-900/20 dark:text-red-400"
+                    >
+                      {{ errorMessage }}
+                    </div>
+
                     <!-- Button -->
                     <div>
                       <button
                         type="submit"
-                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                        :disabled="isLoading"
+                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Sign In
+                        <svg
+                          v-if="isLoading"
+                          class="w-4 h-4 mr-2 animate-spin"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                        </svg>
+                        {{ isLoading ? 'Signing in...' : 'Sign In' }}
                       </button>
                     </div>
                   </div>
@@ -274,23 +291,37 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import CommonGridShape from '@/components/common/CommonGridShape.vue'
 import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const keepLoggedIn = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
-const handleSubmit = () => {
-  // Handle form submission
-  console.log('Form submitted', {
-    email: email.value,
-    password: password.value,
-    keepLoggedIn: keepLoggedIn.value,
-  })
+const handleSubmit = async () => {
+  try {
+    isLoading.value = true
+    errorMessage.value = ''
+
+    await authStore.login(email.value, password.value)
+
+    router.push('/')
+  } catch (error: any) {
+    errorMessage.value = error.response?.data?.message || 'Login failed. Please try again.'
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
