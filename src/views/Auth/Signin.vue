@@ -172,7 +172,7 @@
               <div class="block me-4">
                 <img width="64px" height="64px" src="/images/logo/logo-tab.png" alt="Logo" />
               </div>
-              <h1 class="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+              <h1 class="mb-2 font-semibold text-white text-title-sm dark:text-white sm:text-title-md">
                 Web MNI
               </h1>
             </div>
