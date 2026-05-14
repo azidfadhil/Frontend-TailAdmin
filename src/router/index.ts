@@ -22,7 +22,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Dashboard',
-      component: () => import('../views/Ecommerce.vue'),
+      component: () => import('../views/dashboard.vue'),
       meta: {
         title: 'Dashboard',
         requiresAuth: true
