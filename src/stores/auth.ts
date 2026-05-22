@@ -38,7 +38,11 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
 
   async function login(email: string, password: string) {
-    const res = await api.post('/auth/login', { email, password })
+    const res = await api.post('/auth/login', { email, password }, {
+      headers: {
+        'x-api-key': import.meta.env.VITE_API_KEY
+      }
+    })
     const data = res.data.data
 
     localStorage.setItem('access_token', data.access_token)
